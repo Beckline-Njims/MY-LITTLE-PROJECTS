@@ -1,0 +1,166 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f9;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul,
+#contact ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li,
+#contact ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a,
+#contact li ul a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#contact a {
+    text-decoration: none;
+    color: black;
+}
+
+#contact a:hover {
+    background-color: #333;
+    color: white;
+}
+
+h2 {
+    color: #333;
+}
+
+/* About Section */
+#about {
+    background-color: #fff;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+#about p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Project Section */
+#projects {
+    background-color: #f7f7f7;
+    padding: 50px 20px;
+}
+
+.project-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+}
+
+.project-card button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.project-card button:hover {
+    background-color: #555;
+}
+
+/* Skills Section */
+#skills {
+    background-color: #fff;
+    padding: 50px 20px;
+}
+
+#skills ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+#skills ul li {
+    display: inline-block;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+/* Contact Section */
+#contact {
+    background-color: #f7f7f7;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icon {
+    font-size: 24px;
+    margin: 0 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.social-icon:hover {
+    color: #0073e6;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Scroll to Top Button */
+#topBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#topBtn:hover {
+    background-color: #555;
+}
+
+@media (max-width: 768px) {
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .project-card {
+        margin: 20px 0;
+    }
+}
