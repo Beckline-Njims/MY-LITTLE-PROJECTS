@@ -23,5 +23,5 @@ Save and open the file in a web browser (Chrome or Edge preferred).
 Type something and click Speak — the browser will read it aloud!
 
 **image**
-![Uploading image.png…]()
+<img width="1031" height="529" alt="image" src="https://github.com/user-attachments/assets/f4b26572-45ce-46c8-b108-78e0c5f426e6" />
 
