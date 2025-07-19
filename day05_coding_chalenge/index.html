@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dice Roller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .dice {
+            font-size: 100px;
+            margin: 20px;
+        }
+
+        button {
+            background-color: orange;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffaa00;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎲 Dice Roller</h1>
+    <div class="dice" id="dice">🎲</div>
+    <button onclick="rollDice()">Roll Dice</button>
+
+    <script>
+        function rollDice() {
+            const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            const randomIndex = Math.floor(Math.random() * 6);
+            document.getElementById("dice").textContent = diceFaces[randomIndex];
+        }
+    </script>
+</body>
+
+</html>
