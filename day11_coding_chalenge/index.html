@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tab Section Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .tab-container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: lightgray;
+            text-align: center;
+            border: 1px solid #ccc;
+            transition: background 0.3s;
+        }
+
+        .tab.active {
+            background: orange;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab(0)">Home</div>
+            <div class="tab" onclick="showTab(1)">About</div>
+            <div class="tab" onclick="showTab(2)">Contact</div>
+        </div>
+
+        <div class="tab-content active">
+            <h3>Welcome to Home</h3>
+            <p>This is the home section.</p>
+        </div>
+        <div class="tab-content">
+            <h3>About Us</h3>
+            <p>We are passionate developers!</p>
+        </div>
+        <div class="tab-content">
+            <h3>Contact Us</h3>
+            <p>Email: example@example.com</p>
+        </div>
+    </div>
+
+    <script>
+        function showTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            tabs[index].classList.add('active');
+            contents[index].classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
