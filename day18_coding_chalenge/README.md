@@ -1,31 +1,28 @@
-# 💱 Currency Converter
+# 💱 Free Currency Converter (No API Key Required)
 
-A simple web app to convert currencies using the [ExchangeRates Data API](https://apilayer.com/marketplace/exchangerates_data-api).
+This is a simple currency converter web app using the **Frankfurter API**, which does not require any authentication.
 
-## 🧩 Features
-- Real-time currency conversion
-- Choose from major global currencies
-- Simple and responsive UI
+## 🔥 Features
+- Live currency conversion using real-time rates
+- No API key or subscription needed
+- Simple HTML, CSS, and JS
 
-## 💻 Tech Stack
+## 🚀 How to Use
+1. Open `index.html` in your browser.
+2. Enter the amount to convert.
+3. Choose the currencies.
+4. Click **Convert** to see the result.
+
+## 🔗 API Used
+- [Frankfurter API](https://www.frankfurter.app/)
+
+## 🛠 Tech Stack
 - HTML
 - CSS
 - JavaScript
-- [ExchangeRate API](https://apilayer.com/marketplace/exchangerates_data-api)
-
-## 🚀 How to Use
-1. **Clone this repo** or copy files into a folder.
-2. **Get your free API key** from [apilayer.com](https://apilayer.com/marketplace/exchangerates_data-api).
-3. Replace `"YOUR_EXCHANGERATE_API_KEY"` in `script.js` with your actual API key.
-4. Open `index.html` in a web browser.
-5. Enter amount, select currencies, and click **Convert**.
-
-## 📌 Example
-Converts `100 USD` to `EUR` and displays result like:  
-`100 USD = 91.25 EUR`
 
 ## 📄 License
 MIT
-##image
+##image 
 
-<img width="1164" height="559" alt="image" src="https://github.com/user-attachments/assets/1ea4910f-0cef-4687-a863-f1df34629cfe" />
+<img width="999" height="565" alt="image" src="https://github.com/user-attachments/assets/52f9fea6-6a51-4a41-8550-ff98367e2f28" />
