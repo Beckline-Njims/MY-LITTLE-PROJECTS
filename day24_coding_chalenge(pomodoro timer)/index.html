@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pomodoro Timer</title>
+    <style>
+        body {
+            font-family: Inter, system-ui, -apple-system;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #071226;
+            color: #eaf2ff
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            min-width: 320px;
+            text-align: center
+        }
+
+        h1 {
+            margin: 0 0 8px
+        }
+
+        .display {
+            font-size: 48px;
+            margin: 12px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px
+        }
+
+        button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer
+        }
+
+        .settings {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 12px
+        }
+
+        .settings input {
+            width: 60px;
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Pomodoro</h1>
+        <div id="mode">Work</div>
+        <div class="display" id="time">25:00</div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="pause">Pause</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div class="settings">
+            <label>Work <input id="work" type="number" min="1" value="25" />m</label>
+            <label>Break <input id="break" type="number" min="1" value="5" />m</label>
+            <label>Cycles <input id="cycles" type="number" min="1" value="4" /></label>
+        </div>
+        <div style="margin-top:10px;color:#9fb0c8">Auto switches between work & break. Uses localStorage for settings.
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const timeEl = document.getElementById('time');
+            const modeEl = document.getElementById('mode');
+            const startBtn = document.getElementById('start');
+            const pauseBtn = document.getElementById('pause');
+            const resetBtn = document.getElementById('reset');
+            const workInput = document.getElementById('work');
+            const breakInput = document.getElementById('break');
+            const cyclesInput = document.getElementById('cycles');
+
+            const KEY = 'pomodoro_v1';
+            const defaults = { work: 25, break: 5, cycles: 4 };
+            let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+            if (!state.settings) state.settings = { ...defaults };
+            // load settings from inputs
+            workInput.value = state.settings.work || defaults.work;
+            breakInput.value = state.settings.break || defaults.break;
+            cyclesInput.value = state.settings.cycles || defaults.cycles;
+
+            let timer = null;
+            let remaining = (state.mode === 'break' ? (state.remaining || (state.settings?.break || defaults.break) * 60) : (state.remaining || (state.settings?.work || defaults.work) * 60));
+            let mode = state.mode || 'work';
+            let cyclesDone = state.cyclesDone || 0;
+            let totalCycles = Number(cyclesInput.value);
+
+            function saveState() { localStorage.setItem(KEY, JSON.stringify({ settings: { work: Number(workInput.value), break: Number(breakInput.value), cycles: Number(cyclesInput.value) }, mode, remaining, cyclesDone })); }
+
+            function format(s) {
+                const m = Math.floor(s / 60).toString().padStart(2, '0');
+                const sec = Math.floor(s % 60).toString().padStart(2, '0');
+                return `${m}:${sec}`;
+            }
+            function render() {
+                timeEl.textContent = format(remaining);
+                modeEl.textContent = mode === 'work' ? 'Work' : 'Break';
+            }
+            function tick() {
+                if (remaining > 0) remaining--;
+                else {
+                    // switch
+                    if (mode === 'work') {
+                        cyclesDone++;
+                        mode = 'break';
+                        remaining = Number(breakInput.value) * 60;
+                    } else {
+                        if (cyclesDone >= Number(cyclesInput.value)) {
+                            stop();
+                            alert('Pomodoro session complete!');
+                            return;
+                        }
+                        mode = 'work';
+                        remaining = Number(workInput.value) * 60;
+                    }
+                }
+                saveState(); render();
+            }
+            function start() {
+                if (timer) return;
+                timer = setInterval(tick, 1000);
+            }
+            function pause() { if (timer) { clearInterval(timer); timer = null; saveState(); } }
+            function stop() { if (timer) { clearInterval(timer); timer = null } remaining = Number((mode === 'work' ? workInput.value : breakInput.value)) * 60; saveState(); render(); }
+
+            startBtn.addEventListener('click', () => { start(); });
+            pauseBtn.addEventListener('click', pause);
+            resetBtn.addEventListener('click', () => { pause(); cyclesDone = 0; mode = 'work'; remaining = Number(workInput.value) * 60; saveState(); render(); });
+            // settings change
+            [workInput, breakInput, cyclesInput].forEach(i => i.addEventListener('change', () => {
+                totalCycles = Number(cyclesInput.value);
+                if (mode === 'work') remaining = Number(workInput.value) * 60; else remaining = Number(breakInput.value) * 60;
+                saveState(); render();
+            }));
+
+            // initialize
+            if (!state || !state.remaining) { remaining = Number(workInput.value) * 60; mode = 'work'; cyclesDone = 0; }
+            render();
+        })();
+    </script>
+</body>
+
+</html>
