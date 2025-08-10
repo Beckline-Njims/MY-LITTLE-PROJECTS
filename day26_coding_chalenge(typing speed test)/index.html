@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Typing Speed Test</title>
+    <style>
+        body {
+            font-family: Inter, system-ui;
+            background: #041022;
+            color: #eaf3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0
+        }
+
+        .card {
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: transparent;
+            color: inherit;
+            resize: none
+        }
+
+        .target {
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 8px;
+            white-space: pre-wrap
+        }
+
+        .meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 8px
+        }
+
+        button {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Typing Speed Test</h1>
+        <div class="target" id="target"></div>
+        <textarea id="input" placeholder="Start typing here... (press Start first)"></textarea>
+        <div class="meta">
+            <button id="start">Start</button>
+            <button id="reset">Reset</button>
+            <div>Time: <span id="time">0</span>s</div>
+            <div>WPM: <span id="wpm">0</span></div>
+            <div>Accuracy: <span id="acc">0</span>%</div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const texts = [
+                "The quick brown fox jumps over the lazy dog.",
+                "Practice typing regularly to increase speed and accuracy.",
+                "Frontend development requires a combination of creativity and logic."
+            ];
+            const target = document.getElementById('target');
+            const input = document.getElementById('input');
+            const startBtn = document.getElementById('start');
+            const resetBtn = document.getElementById('reset');
+            const tEl = document.getElementById('time');
+            const wpmEl = document.getElementById('wpm');
+            const accEl = document.getElementById('acc');
+
+            let chosen, startTime = null, timer = null;
+
+            function newTest() {
+                chosen = texts[Math.floor(Math.random() * texts.length)];
+                target.textContent = chosen;
+                input.value = '';
+                startTime = null; clearInterval(timer); tEl.textContent = '0'; wpmEl.textContent = '0'; accEl.textContent = '0';
+                input.disabled = true;
+            }
+            function start() {
+                input.disabled = false;
+                input.focus();
+                startTime = Date.now();
+                timer = setInterval(() => {
+                    const secs = Math.floor((Date.now() - startTime) / 1000);
+                    tEl.textContent = secs;
+                    updateStats();
+                }, 250);
+            }
+            function reset() {
+                newTest();
+            }
+            function updateStats() {
+                const typed = input.value;
+                const wordsTyped = typed.trim().split(/\s+/).filter(Boolean).length;
+                const elapsedMin = Math.max(1 / 60, (Date.now() - startTime) / 60000);
+                const wpm = Math.round(wordsTyped / elapsedMin);
+                wpmEl.textContent = isFinite(wpm) ? wpm : 0;
+                // accuracy: compare chars
+                let correct = 0;
+                for (let i = 0; i < typed.length; i++) {
+                    if (typed[i] === chosen[i]) correct++;
+                }
+                const acc = typed.length === 0 ? 0 : Math.round(correct / typed.length * 100);
+                accEl.textContent = acc;
+                // if finished
+                if (typed.length >= chosen.length) {
+                    clearInterval(timer);
+                    input.disabled = true;
+                    alert(`Finished! WPM: ${wpmEl.textContent}, Accuracy: ${accEl.textContent}%`);
+                }
+            }
+
+            startBtn.addEventListener('click', () => { if (!startTime) start(); });
+            resetBtn.addEventListener('click', reset);
+            input.addEventListener('input', () => {
+                if (startTime) updateStats();
+            });
+
+            newTest();
+        })();
+    </script>
+</body>
+
+</html>
