@@ -1,0 +1,183 @@
+
+    
+                   
+              
+             
+             
+             
+             
+             
+             
+        
+       
+             
+             
+             
+             
+                
+        
+       
+             
+             
+             
+        
+       
+             
+             
+                
+             
+             
+        
+       
+             
+               
+             
+        
+       
+             
+             
+                
+             
+             
+             
+        
+       
+             
+        
+       
+             
+             
+             
+             
+            
+                                          
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Bookmark Saver</title>
+    <style>
+        body {
+            font-family: Inter, system-ui;
+            background: #081022;
+            color: #eaf3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px
+        }
+
+        .card {
+            width: 100%;
+            max-width: 840px;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: transparent;
+            color: inherit
+        }
+
+        .list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px
+        }
+
+        .item {
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .item a {
+            color: #9fe3ff
+        }
+
+        button {
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Bookmark Saver</h1>
+        <div class="form">
+            <input id="title" placeholder="Title">
+            <input id="url" placeholder="https://example.com">
+            <button id="add">Add</button>
+        </div>
+        <div style="margin-bottom:10px">
+            <input id="search" placeholder="Search bookmarks..."
+                style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
+        </div>
+        <div class="list" id="list"></div>
+    </div>
+
+    <script>
+        (() => {
+            const KEY = 'bookmarks_v1';
+            const title = document.getElementById('title');
+            const url = document.getElementById('url');
+            const addBtn = document.getElementById('add');
+            const listEl = document.getElementById('list');
+            const search = document.getElementById('search');
+
+            let items = JSON.parse(localStorage.getItem(KEY) || '[]');
+
+            function save() { localStorage.setItem(KEY, JSON.stringify(items)); render(); }
+            function add() {
+                let u = url.value.trim();
+                if (!u) return alert('Enter a URL');
+                if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+                items.unshift({ id: Date.now(), title: title.value.trim() || u, url: u });
+                title.value = ''; url.value = '';
+                save();
+            }
+            function remove(id) { if (!confirm('Delete bookmark?')) return; items = items.filter(i => i.id !== id); save(); }
+            function render() {
+                const q = search.value.trim().toLowerCase();
+                listEl.innerHTML = '';
+                const filtered = items.filter(i => !q || i.title.toLowerCase().includes(q) || i.url.toLowerCase().includes(q));
+                for (const it of filtered) {
+                    const div = document.createElement('div'); div.className = 'item';
+                    const a = document.createElement('a'); a.href = it.url; a.target = '_blank'; a.textContent = it.title;
+                    const meta = document.createElement('div'); meta.style.fontSize = '13px'; meta.style.color = '#9fb0c8'; meta.textContent = it.url;
+                    const tools = document.createElement('div');
+                    const open = document.createElement('button'); open.textContent = 'Open'; open.addEventListener('click', () => window.open(it.url, '_blank'));
+                    const del = document.createElement('button'); del.textContent = 'Delete'; del.addEventListener('click', () => remove(it.id));
+                    tools.appendChild(open); tools.appendChild(del);
+                    div.appendChild(a); div.appendChild(meta); div.appendChild(tools);
+                    listEl.appendChild(div);
+                }
+            }
+
+            addBtn.addEventListener('click', add);
+            search.addEventListener('input', render);
+            render();
+        })();
+    </script>
+</body>
+
+</html>
