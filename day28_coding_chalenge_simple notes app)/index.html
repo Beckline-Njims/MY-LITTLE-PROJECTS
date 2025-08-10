@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Simple Notes</title>
+    <style>
+        body {
+            font-family: Inter, system-ui;
+            background: #081022;
+            color: #eaf3ff;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 28px
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 12px
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 10px
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 70vh;
+            overflow: auto
+        }
+
+        .note-item {
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.01);
+            cursor: pointer
+        }
+
+        .editor textarea {
+            width: 100%;
+            height: 60vh;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: transparent;
+            color: inherit
+        }
+
+        .meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="panel">
+            <h2>Notes</h2>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+                <input id="title" placeholder="Title"
+                    style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04)">
+                <button id="new">New</button>
+            </div>
+            <div class="notes-list" id="list"></div>
+        </div>
+        <div class="panel editor">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <h3 id="editor-title">Select or create a note</h3>
+                <div class="meta">
+                    <button id="save">Save</button>
+                    <button id="delete">Delete</button>
+                </div>
+            </div>
+            <textarea id="content" placeholder="Your note content..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const KEY = 'notes_v1';
+            const listEl = document.getElementById('list');
+            const newBtn = document.getElementById('new');
+            const saveBtn = document.getElementById('save');
+            const deleteBtn = document.getElementById('delete');
+            const titleInput = document.getElementById('title');
+            const editorTitle = document.getElementById('editor-title');
+            const content = document.getElementById('content');
+
+            let notes = JSON.parse(localStorage.getItem(KEY) || '[]');
+            let currentId = null;
+
+            function saveAll() { localStorage.setItem(KEY, JSON.stringify(notes)); renderList(); }
+            function newNote() {
+                const t = titleInput.value.trim() || 'Untitled';
+                const n = { id: Date.now(), title: t, content: '', updated: Date.now() };
+                notes.unshift(n);
+                currentId = n.id;
+                titleInput.value = '';
+                saveAll();
+                renderEditor();
+            }
+            function selectNote(id) { currentId = id; renderEditor(); }
+            function deleteNote() {
+                if (!currentId) return alert('No note selected');
+                if (!confirm('Delete this note?')) return;
+                notes = notes.filter(n => n.id !== currentId);
+                currentId = notes.length ? notes[0].id : null;
+                saveAll();
+                renderEditor();
+            }
+
+            function renderList() {
+                listEl.innerHTML = '';
+                for (const n of notes) {
+                    const div = document.createElement('div'); div.className = 'note-item';
+                    div.textContent = n.title;
+                    div.addEventListener('click', () => selectNote(n.id));
+                    listEl.appendChild(div);
+                }
+            }
+
+            function renderEditor() {
+                const note = notes.find(n => n.id === currentId);
+                if (note) {
+                    editorTitle.textContent = note.title;
+                    content.value = note.content;
+                } else {
+                    editorTitle.textContent = 'Select or create a note';
+                    content.value = '';
+                }
+            }
+
+            saveBtn.addEventListener('click', () => {
+                if (!currentId) return alert('No note selected');
+                const note = notes.find(n => n.id === currentId);
+                note.content = content.value;
+                note.title = note.title; note.updated = Date.now();
+                saveAll();
+                alert('Saved');
+            });
+            newBtn.addEventListener('click', newNote);
+            deleteBtn.addEventListener('click', deleteNote);
+
+            // initial
+            if (notes.length) currentId = notes[0].id;
+            renderList();
+            renderEditor();
+        })();
+    </script>
+</body>
+
+</html>
