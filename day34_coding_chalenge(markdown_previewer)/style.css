@@ -1,0 +1,17 @@
+body {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+textarea {
+  width: 45%;
+  height: 400px;
+  padding: 10px;
+}
+#preview {
+  width: 45%;
+  height: 400px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  overflow-y: auto;
+}

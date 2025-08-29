@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Markdown Previewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <textarea id="markdown" placeholder="Type markdown..."></textarea>
+  <div id="preview"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    const textarea = document.getElementById("markdown");
+    const preview = document.getElementById("preview");
+
+    textarea.addEventListener("input", () => {
+      preview.innerHTML = marked.parse(textarea.value);
+    });
+  </script>
+</body>
+</html>
